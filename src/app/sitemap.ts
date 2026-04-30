@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllCityStatePairs } from "@/lib/seo-cities";
-import { getTopRepairSlugs } from "@/lib/seo-brands";
+import { getCuratedRepairSlugs } from "@/lib/seo-data";
 
 const BASE_URL = "https://gaterepairdispatch.com";
 
@@ -19,7 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // ─── pSEO city/brand/symptom pages ───
   const cityPairs = getAllCityStatePairs();
-  const repairSlugs = getTopRepairSlugs();
+  const repairSlugs = getCuratedRepairSlugs();
 
   const pseoPages: MetadataRoute.Sitemap = [];
 

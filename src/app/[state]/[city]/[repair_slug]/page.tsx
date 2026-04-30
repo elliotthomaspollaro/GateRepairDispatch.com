@@ -11,14 +11,27 @@ import FAQ from "@/components/Sections/FAQ";
 import FinalCTA from "@/components/Sections/FinalCTA";
 import StickyCTA from "@/components/UI/StickyCTA";
 import SeoBasement from "@/components/SEO/SeoBasement";
+import LocalFAQ from "@/components/SEO/LocalFAQ";
 import NearbyCities from "@/components/SEO/NearbyCities";
 import {
   parseRepairSlug,
   getStateName,
   formatCityName,
+  buildMetaTitle,
+  buildMetaDescription,
+  buildHeadline,
 } from "@/lib/seo-utils";
 import { getAllCityStatePairs } from "@/lib/seo-cities";
-import { getTopRepairSlugs } from "@/lib/seo-brands";
+import {
+  getBuildRepairSlugs,
+  BRANDS,
+  COMPONENTS,
+  GATE_TYPES,
+  hashSeed,
+  pick,
+  pickN,
+  URGENCY_MODIFIERS,
+} from "@/lib/seo-data";
 
 type Props = {
   params: Promise<{
@@ -28,10 +41,10 @@ type Props = {
   }>;
 };
 
-/* ─── Pre-render pSEO pages at build time ─── */
+/* ─── Pre-render curated subset at build time ─── */
 export async function generateStaticParams() {
   const cityPairs = getAllCityStatePairs();
-  const repairSlugs = getTopRepairSlugs();
+  const repairSlugs = getBuildRepairSlugs();
 
   const params: { state: string; city: string; repair_slug: string }[] = [];
 
@@ -47,16 +60,19 @@ export async function generateStaticParams() {
 /* ─── Allow non-pre-rendered paths to be generated on-demand ─── */
 export const dynamicParams = true;
 
-/* ─── Dynamic Metadata for SEO ─── */
+/* ─── Dynamic Metadata with Urgency Modifiers ─── */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { state, city, repair_slug } = await params;
 
   const cityName = formatCityName(city);
   const stateFull = getStateName(state);
-  const { brandDisplay, symptomDisplay } = parseRepairSlug(repair_slug);
+  const parsed = parseRepairSlug(repair_slug);
+  const seed = hashSeed(city);
+  const urgency = pick(URGENCY_MODIFIERS, seed, 0);
+  const urgencyDisplay = urgency.charAt(0).toUpperCase() + urgency.slice(1);
 
-  const title = `Emergency ${brandDisplay} Gate Repair in ${cityName}, ${state.toUpperCase()} | ${symptomDisplay}`;
-  const description = `${symptomDisplay} on your ${brandDisplay} gate in ${cityName}, ${stateFull}? Get same-day dispatch from a licensed, bonded gate technician. Free on-site estimate. Call now or get your quote in 60 seconds from GateRepairDispatch.com.`;
+  const title = buildMetaTitle(parsed, cityName, state, urgencyDisplay);
+  const description = buildMetaDescription(parsed, cityName, stateFull, urgencyDisplay);
 
   return {
     title,
@@ -90,33 +106,81 @@ export default async function LocationRepairPage({ params }: Props) {
   }
 
   const cityName = formatCityName(city);
-  const { brandDisplay, symptomDisplay } = parseRepairSlug(repair_slug);
+  const parsed = parseRepairSlug(repair_slug);
+  const seed = hashSeed(city);
 
-  // JSON-LD structured data for this page
+  // ─── Enriched LocalBusiness + Service JSON-LD ───
+  const serviceBrands = pickN(BRANDS as unknown as string[], seed, 5, 0);
+  const serviceComponents = pickN(COMPONENTS as unknown as string[], seed, 5, 7);
+  const serviceGateTypes = pickN(GATE_TYPES as unknown as string[], seed, 4, 3);
+
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    name: `GateRepairDispatch.com — ${cityName}, ${stateFull}`,
-    description: `Emergency ${brandDisplay} gate repair for ${symptomDisplay.toLowerCase()} in ${cityName}, ${stateFull}. Same-day dispatch from licensed technicians.`,
-    url: `https://gaterepairdispatch.com/${state}/${city}/${repair_slug}`,
-    areaServed: {
-      "@type": "City",
-      name: cityName,
-      containedInPlace: {
-        "@type": "State",
-        name: stateFull,
+    "@graph": [
+      {
+        "@type": "LocalBusiness",
+        "@id": `https://gaterepairdispatch.com/${state}/${city}/${repair_slug}#business`,
+        name: `GateRepairDispatch.com — ${cityName}, ${stateFull}`,
+        description: `Emergency automatic gate repair for ${cityName}, ${stateFull}. Same-day dispatch from licensed technicians. All brands serviced.`,
+        url: `https://gaterepairdispatch.com/${state}/${city}/${repair_slug}`,
+        areaServed: {
+          "@type": "City",
+          name: cityName,
+          containedInPlace: {
+            "@type": "State",
+            name: stateFull,
+          },
+        },
+        priceRange: "$150 - $2,500+",
+        serviceType: "Automatic Gate Repair",
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          name: "Gate Repair Services",
+          itemListElement: [
+            ...serviceBrands.map((brand) => ({
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: `${brand} Gate Repair`,
+                description: `Factory-trained repair for ${brand} gate openers and access control systems in ${cityName}.`,
+              },
+            })),
+            ...serviceComponents.map((comp) => ({
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: `${comp.charAt(0).toUpperCase() + comp.slice(1)} Repair & Replacement`,
+                description: `Professional ${comp} repair and replacement for automatic gates in ${cityName}.`,
+              },
+            })),
+          ],
+        },
       },
-    },
-    priceRange: "$150 - $2,500+",
-    serviceType: "Automatic Gate Repair",
+      {
+        "@type": "Service",
+        "@id": `https://gaterepairdispatch.com/${state}/${city}/${repair_slug}#service`,
+        name: parsed.brand
+          ? `${parsed.brand} Gate Repair in ${cityName}`
+          : `Automatic Gate Repair in ${cityName}`,
+        provider: {
+          "@id": `https://gaterepairdispatch.com/${state}/${city}/${repair_slug}#business`,
+        },
+        areaServed: {
+          "@type": "City",
+          name: cityName,
+        },
+        serviceType: "Gate Repair",
+        description: `Licensed, bonded gate repair technicians serving ${cityName}, ${stateFull}. Specializing in ${serviceGateTypes.join(", ")} repair.`,
+      },
+    ],
   };
 
-  // Dynamic hero headline
-  const headline = (
-    <>
-      Your {brandDisplay} Gate in {cityName} — Fixed Fast.
-    </>
-  );
+  // ─── Dynamic hero headline ───
+  const headlineText = buildHeadline(parsed, cityName);
+
+  // For the hero, extract brand/symptom from parsed data
+  const heroBrand = parsed.brand || undefined;
+  const heroSymptom = parsed.symptom || parsed.component || undefined;
 
   return (
     <>
@@ -129,9 +193,9 @@ export default async function LocationRepairPage({ params }: Props) {
         <HeroSection
           city={cityName}
           state={state}
-          brand={brandDisplay}
-          symptom={symptomDisplay}
-          headline={headline}
+          brand={heroBrand}
+          symptom={heroSymptom}
+          headline={<>{headlineText}</>}
         />
         <HowItWorks />
         <StatsBar />
@@ -142,8 +206,12 @@ export default async function LocationRepairPage({ params }: Props) {
           city={cityName}
           state={state}
           stateFull={stateFull}
-          brand={brandDisplay}
-          symptom={symptomDisplay}
+          parsed={parsed}
+        />
+        <LocalFAQ
+          city={cityName}
+          stateFull={stateFull}
+          parsed={parsed}
         />
         <NearbyCities
           currentCity={city}
