@@ -1,0 +1,52 @@
+// ─── GateRepairDispatch.com Prisma Schema ───
+// Lead Generation & Repair Dispatch Data Model
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // ─── Contact Info ───
+  firstName String
+  lastName  String?
+  email     String
+  phone     String
+
+  // ─── Triage Details ───
+  zipCode      String
+  gateType     String   // Residential, HOA, Commercial, etc.
+  brand        String   // LiftMaster, DoorKing, etc.
+  primaryIssue String   // Stuck Open, Keypad Dead, etc.
+
+  // ─── Source Tracking ───
+  sourceUrl    String? // The pSEO page URL they came from
+  utmSource    String?
+  utmMedium    String?
+  utmCampaign  String?
+  utmContent   String?
+  referrer     String?
+
+  // ─── API / Monetization ───
+  apiResponseRaw String?  // Raw JSON response for debugging
+  apiPartner     String?  // Which API partner handled the lead
+  apiSuccess     Boolean  @default(false)
+
+  // ─── Status ───
+  status String @default("new") // new, dispatched, completed, expired
+
+  // ─── Indexes for common queries ───
+  @@index([zipCode])
+  @@index([status])
+  @@index([createdAt])
+  @@index([email])
+  @@map("leads")
+}
