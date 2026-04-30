@@ -26,22 +26,30 @@ export default function Footer() {
       {/* Main footer */}
       <div className="max-w-6xl mx-auto px-4 py-12">
         <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8">
-          <div className="flex flex-col items-center md:items-start max-w-xs text-center md:text-left space-y-4">
-            {/* Logo on a cream pill so it's readable against the dark bg */}
-            <div className="rounded-xl px-3 py-2" style={{ background: "#F7F3EB" }}>
+          <div className="flex flex-col items-center md:items-start max-w-sm text-center md:text-left space-y-4">
+            {/* Logo: mascot + white text lockup */}
+            <a href="/" className="flex items-center gap-3 group">
               <Image
-                src="/logo.png"
-                alt="Gate Repair Dispatch"
-                width={180}
-                height={60}
-                className="h-12 w-auto"
+                src="/mascot.png"
+                alt="Gate Repair Dispatch mascot"
+                width={56}
+                height={56}
+                className="w-14 h-14 object-contain"
               />
-            </div>
-            <p className="text-white/50 text-sm font-medium leading-relaxed">
+              <div className="leading-none">
+                <span className="block text-xl font-heading font-bold text-white group-hover:text-white/90 transition-colors">
+                  Gate Repair
+                </span>
+                <span className="block text-sm font-heading font-bold tracking-[0.2em] uppercase" style={{ color: "#4BA6A0" }}>
+                  Dispatch
+                </span>
+              </div>
+            </a>
+            <p className="text-white/45 text-sm font-medium leading-relaxed">
               We connect you with licensed, bonded gate repair technicians for emergency driveway gate and access control repair nationwide.
             </p>
           </div>
-          <div className="flex flex-col items-center md:items-end space-y-4">
+          <div className="flex flex-col items-center md:items-end space-y-4 md:pt-2">
             <nav className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm font-bold text-white/60">
               <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
               <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
