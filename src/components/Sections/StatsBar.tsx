@@ -1,13 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Wrench, Clock, ThumbsUp, MapPin } from "lucide-react";
+import { Wrench, Timer, Star, Globe } from "lucide-react";
 
 const stats = [
   { icon: Wrench, value: "15,000+", label: "Gates Repaired" },
-  { icon: Clock, value: "Same-Day", label: "Dispatch Available" },
-  { icon: ThumbsUp, value: "98%", label: "Customer Satisfaction" },
-  { icon: MapPin, value: "Nationwide", label: "Coverage" },
+  { icon: Timer, value: "Same-Day", label: "Dispatch Available" },
+  { icon: Star, value: "98%", label: "Customer Satisfaction" },
+  { icon: Globe, value: "Nationwide", label: "Coverage" },
 ];
 
 export default function StatsBar() {

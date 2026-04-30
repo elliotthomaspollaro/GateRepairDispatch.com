@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle, Zap, Shield } from "lucide-react";
+import { CheckCircle2, Zap, ShieldCheck } from "lucide-react";
 import MultiStepLeadForm from "@/components/Form/MultiStepLeadForm";
 
 interface HeroSectionProps {
@@ -88,7 +88,7 @@ export default function HeroSection({
               >
                 {["LiftMaster Certified", "Same-Day Service", "Free Estimates"].map((item) => (
                   <div key={item} className="flex items-center gap-1.5 text-sm font-medium" style={{ color: "#6E8298" }}>
-                    <CheckCircle className="w-4 h-4" style={{ color: "#4BA6A0" }} />
+                    <CheckCircle2 className="w-4 h-4" style={{ color: "#4BA6A0" }} />
                     {item}
                   </div>
                 ))}
@@ -113,7 +113,7 @@ export default function HeroSection({
       <div className="py-4 px-4" style={{ background: "#1B2D45" }}>
         <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-center">
           <div className="flex items-center justify-center w-10 h-10 rounded-lg shrink-0" style={{ background: "rgba(75,166,160,0.15)" }}>
-            <Shield className="w-5 h-5" style={{ color: "#4BA6A0" }} />
+            <ShieldCheck className="w-5 h-5" style={{ color: "#4BA6A0" }} />
           </div>
           <div className="flex flex-col sm:items-start">
             <span className="text-white font-bold text-sm sm:text-base tracking-wide">

@@ -1,28 +1,28 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ClipboardList, UserCheck, Wrench } from "lucide-react";
+import { FileText, UserSearch, Truck } from "lucide-react";
 
 const steps = [
   {
     number: 1,
     title: "Describe Your Issue",
     desc: "Tell us about your gate type, brand, and what's going wrong. Takes 60 seconds.",
-    icon: ClipboardList,
+    icon: FileText,
     accent: "#4BA6A0",
   },
   {
     number: 2,
     title: "Get Matched Instantly",
     desc: "We connect you with a licensed, certified gate technician in your area.",
-    icon: UserCheck,
+    icon: UserSearch,
     accent: "#E8732A",
   },
   {
     number: 3,
     title: "Tech Dispatched",
     desc: "Your technician calls to confirm and dispatches a truck — often same-day.",
-    icon: Wrench,
+    icon: Truck,
     accent: "#1B2D45",
   },
 ];
@@ -66,7 +66,7 @@ export default function HowItWorks() {
 
               {/* Icon */}
               <div className="w-16 h-16 rounded-xl flex items-center justify-center mb-4" style={{ background: "#F0ECE2" }}>
-                <step.icon className="w-8 h-8" style={{ color: "#6E8298" }} />
+                <step.icon className="w-8 h-8" style={{ color: step.accent }} />
               </div>
 
               <h3 className="text-xl mb-3 leading-tight" style={{ color: "#1B2D45" }}>
@@ -80,7 +80,7 @@ export default function HowItWorks() {
               {i < steps.length - 1 && (
                 <div className="hidden md:block absolute -right-4 top-1/2 -translate-y-1/2 z-10">
                   <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center" style={{ border: "1px solid #E4DED3" }}>
-                    <span className="text-lg font-bold" style={{ color: "#6E8298" }}>→</span>
+                    <span className="text-lg font-bold" style={{ color: "#E8732A" }}>→</span>
                   </div>
                 </div>
               )}

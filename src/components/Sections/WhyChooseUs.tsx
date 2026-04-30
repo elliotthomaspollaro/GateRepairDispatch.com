@@ -1,26 +1,26 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Shield, Zap, Wrench, BadgeCheck } from "lucide-react";
+import { ShieldCheck, Timer, Settings, Award } from "lucide-react";
 
 const benefits = [
   {
-    icon: Shield,
+    icon: ShieldCheck,
     title: "Licensed & Bonded",
     description: "Every technician in our network is licensed, bonded, and insured. Your property is protected.",
   },
   {
-    icon: Zap,
+    icon: Timer,
     title: "Same-Day Dispatch",
     description: "Emergency response when your gate is stuck. Most technicians arrive within 2–4 hours of your call.",
   },
   {
-    icon: Wrench,
+    icon: Settings,
     title: "All Brands Serviced",
     description: "LiftMaster, DoorKing, Viking, Mighty Mule, Linear, FAAC, Ghost Controls — we repair them all.",
   },
   {
-    icon: BadgeCheck,
+    icon: Award,
     title: "Satisfaction Guaranteed",
     description: "If you're not satisfied with the repair, we'll send another tech at no extra cost.",
   },
