@@ -22,7 +22,7 @@ export default function StatsBar() {
         >
           <h2 className="text-3xl sm:text-4xl text-white mb-2">
             Trusted. Certified.{" "}
-            <span style={{ color: "#F5B731" }}>Rapid Response.</span>
+            <span style={{ color: "#E8732A" }}>Rapid Response.</span>
           </h2>
           <p className="text-base" style={{ color: "rgba(255,255,255,0.5)" }}>
             Real results from our certified technician network.
@@ -39,7 +39,7 @@ export default function StatsBar() {
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.1 }}
             >
-              <stat.icon className="w-8 h-8 mx-auto mb-3" style={{ color: "#F5B731" }} />
+              <stat.icon className="w-8 h-8 mx-auto mb-3" style={{ color: "#E8732A" }} />
               <p className="text-3xl sm:text-4xl font-heading text-white">
                 {stat.value}
               </p>
